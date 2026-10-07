@@ -40,6 +40,7 @@ onMounted(async () => {
     contact_notify_email: settingsStore.settings.contact_notify_email || DEFAULT_CONTACT_EMAIL,
     contact_redirect_url: settingsStore.settings.contact_redirect_url || '',
     contact_redirect_delay: Number(settingsStore.settings.contact_redirect_delay) || 0,
+    home_canva_url: settingsStore.settings.home_canva_url || '',
   };
 });
 
@@ -149,6 +150,17 @@ async function save() {
             <MaterialTypeListEditor v-model="form.material_types" input-id="settings-material-types" placeholder="Example: Worksheet" />
             <div class="form-text">
               Click the icon or color circle to change it. This list appears on the resource form and as a Library filter.
+            </div>
+          </div>
+        </div>
+
+        <h2 class="h6 text-uppercase text-muted mb-3 mt-4" style="letter-spacing:0.05em">Canva home</h2>
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="admin-form-label" for="settings-home-canva-url">Canva design link</label>
+            <input id="settings-home-canva-url" v-model="form.home_canva_url" type="url" class="form-control" placeholder="https://www.canva.com/design/.../view" />
+            <div class="form-text">
+              Use a public Canva design or canva.link URL. Changes made in Canva appear on the home page automatically. The materials library stays available. Leave this blank to use the original home page.
             </div>
           </div>
         </div>
@@ -322,7 +334,7 @@ async function save() {
 
         <h2 class="h6 text-uppercase text-muted mb-3 mt-4" style="letter-spacing:0.05em">Google Analytics</h2>
         <p class="text-muted small mb-3">
-          Optional database ID in addition to <code>VITE_GA_MEASUREMENT_ID</code> at deployment. The <strong>Dashboard</strong> shows internal visits and links to the complete GA report.
+          This ID takes priority over the deployment default. The <strong>Dashboard</strong> shows internal visits and links to the complete Google Analytics report.
         </p>
         <div class="row g-3">
           <div class="col-md-6">
