@@ -162,6 +162,18 @@ async function save() {
             <div class="form-text">
               Use a public Canva design or canva.link URL. Changes made in Canva appear on the home page automatically. The materials library stays available. Leave this blank to use the original home page.
             </div>
+            <div class="mt-3">
+              <h3 class="h6">Canva on other pages</h3>
+              <p class="form-text mb-2">
+                In the site editor, choose Pages and select the page you want. Add a new responsive section, choose Canva, paste the public design link and click Apply Canva link. Click Publish to show it on the site.
+              </p>
+              <p class="form-text mb-2">
+                Each page uses its own Canva block. Edit the design and its button links in Canva.
+              </p>
+              <RouterLink to="/library?edit=1" class="btn btn-outline-primary btn-sm">
+                Add Canva to the library
+              </RouterLink>
+            </div>
           </div>
         </div>
 
