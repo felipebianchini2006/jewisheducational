@@ -9,6 +9,15 @@ const settingsStore = useSettingsStore();
 const form = ref({});
 const message = ref('');
 const error = ref('');
+const canvaDesignLink = computed({
+  get: () => form.value.canva_integration_mode === 'native'
+    ? form.value.canva_design_reference_url || form.value.home_canva_url || ''
+    : form.value.home_canva_url || '',
+  set: value => {
+    const key = form.value.canva_integration_mode === 'native' ? 'canva_design_reference_url' : 'home_canva_url';
+    form.value[key] = value;
+  },
+});
 
 const socialProfiles = [
   ['Facebook', 'social_facebook'],
@@ -157,9 +166,13 @@ async function save() {
         <h2 class="h6 text-uppercase text-muted mb-3 mt-4" style="letter-spacing:0.05em">Canva home</h2>
         <div class="row g-3">
           <div class="col-12">
+            <div v-if="form.canva_integration_mode === 'native'" class="alert alert-info">
+              <strong>Canva design integrated into the site</strong>
+              <p class="mb-0 mt-1">The home, library and resource pages use the Canva visual style with working search, account and download tools. This link is the design reference. Edit the live page text and images with Edit site, and site colors in Appearance.</p>
+            </div>
             <label class="admin-form-label" for="settings-home-canva-url">Canva design link</label>
-            <input id="settings-home-canva-url" v-model="form.home_canva_url" type="url" class="form-control" placeholder="https://www.canva.com/design/.../view" />
-            <div class="form-text">
+            <input id="settings-home-canva-url" v-model="canvaDesignLink" type="url" class="form-control" placeholder="https://www.canva.com/design/.../view" />
+            <div v-if="form.canva_integration_mode !== 'native'" class="form-text">
               Use a public Canva design or canva.link URL. Changes made in Canva appear on the home page automatically. The materials library stays available. Leave this blank to use the original home page.
             </div>
             <div class="mt-3">

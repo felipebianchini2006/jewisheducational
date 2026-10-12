@@ -1,6 +1,12 @@
 # Canva em Settings e nas outras páginas
 
-Para trocar o design da página inicial:
+Desde 12/10/2026, o site usa o visual do Canva em componentes nativos. O campo em Settings guarda a referência do design. Textos e imagens são editados em **Edit site**; as cores, em **Appearance**. Veja [Design do Canva integrado ao site](canva-design-integrado.md) para o uso atual.
+
+As instruções abaixo descrevem o modo anterior de incorporação. Elas ainda se aplicam a apresentações independentes inseridas como conteúdo, mas trocar o link da referência no modo nativo não redesenha o site automaticamente.
+
+## Modo anterior de incorporação
+
+Para trocar o design incorporado da página inicial no modo anterior:
 
 1. Abra **Admin → Settings → Canva home**.
 2. Cole o link público em **Canva design link**.
