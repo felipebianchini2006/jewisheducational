@@ -168,7 +168,7 @@ async function save() {
             <label class="admin-form-label" for="settings-home-canva-url">Canva design link</label>
             <input id="settings-home-canva-url" v-model="canvaDesignLink" type="url" class="form-control" placeholder="https://www.canva.com/design/.../view" />
             <div class="form-text">
-              Paste a public Canva design or canva.link URL and click Save settings to replace the home page. Edit and publish the design in Canva to update it. Browse materials opens the library, where search and downloads continue to work. Leave this blank to use the saved site home.
+              Paste a public Canva design or canva.link URL and click Save settings to replace the home page. Edit and publish the design in Canva to update it. Add library and login buttons to the Canva design using the full site URLs ending in /library and /login. Search and downloads continue to work in the library. Leave this blank to use the saved site home.
             </div>
             <div class="mt-3">
               <h3 class="h6">Additional Canva content on other pages</h3>
