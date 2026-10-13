@@ -7,14 +7,25 @@ const crypto = require('node:crypto');
 // restored module. A normal build does not need this recovery overlay.
 function prepareSettingsRestore({ currentDist, settingsBundle, outputDist }) {
   const html = fs.readFileSync(path.join(currentDist, 'index.html'), 'utf8');
-  if (/<script\b[^>]*type=["']importmap["']/i.test(html)) {
-    throw new Error('The current shell already has an import map. Review it before restoring Settings.');
+  const maps = [...html.matchAll(/<script\b[^>]*type=["']importmap["'][^>]*>([\s\S]*?)<\/script>/gi)];
+  if (maps.length > 1) throw new Error('The current shell has competing import maps.');
+  let existingMap = {};
+  if (maps.length) {
+    try { existingMap = JSON.parse(maps[0][1]); }
+    catch { throw new Error('The current import map is not valid JSON.'); }
+    if (!existingMap || typeof existingMap !== 'object' || Array.isArray(existingMap)
+      || (existingMap.imports && (typeof existingMap.imports !== 'object' || Array.isArray(existingMap.imports)))) {
+      throw new Error('The current import map is not valid.');
+    }
   }
   const entry = html.match(/<script\b[^>]*src=["'](\/assets\/index-[^"']+\.js)["']/i)?.[1];
   if (!entry) throw new Error('The current frontend entry was not found.');
   const main = fs.readFileSync(path.join(currentDist, entry.slice(1)), 'utf8');
   const oldSettings = [...new Set(main.match(/SettingsView-[\w-]+\.js/g) || [])];
   if (oldSettings.length !== 1) throw new Error('The current entry must reference exactly one Settings screen.');
+  if (Object.values(existingMap.scopes || {}).some(scope => Object.hasOwn(scope, `/assets/${oldSettings[0]}`))) {
+    throw new Error('A scoped Settings import would override the repaired screen.');
+  }
   const assetDir = path.join(currentDist, 'assets');
   let settings = fs.readFileSync(settingsBundle, 'utf8');
   if (!settings.includes('home_canva_url') || !settings.includes('Canva design link')) {
@@ -41,9 +52,11 @@ function prepareSettingsRestore({ currentDist, settingsBundle, outputDist }) {
     }
   }
   const restoredName = `SettingsView-${crypto.createHash('sha256').update(settings).digest('hex').slice(0, 12)}.js`;
-  const imports = { [`/assets/${oldSettings[0]}`]: `/assets/${restoredName}` };
-  const map = `<script type="importmap">${JSON.stringify({ imports })}</script>`;
-  const restoredHtml = html.replace(/<head\b[^>]*>/i, head => `${head}\n    ${map}`);
+  const imports = { ...existingMap.imports, [`/assets/${oldSettings[0]}`]: `/assets/${restoredName}` };
+  const map = `<script type="importmap">${JSON.stringify({ ...existingMap, imports }).replaceAll('<', '\\u003c')}</script>`;
+  const restoredHtml = maps.length
+    ? html.replace(maps[0][0], () => map)
+    : html.replace(/<head\b[^>]*>/i, head => `${head}\n    ${map}`);
   if (restoredHtml === html) throw new Error('The current shell has no head element.');
   const relativeOutput = path.relative(path.resolve(currentDist), path.resolve(outputDist));
   if (!relativeOutput || (!relativeOutput.startsWith('..' + path.sep) && relativeOutput !== '..' && !path.isAbsolute(relativeOutput))) {

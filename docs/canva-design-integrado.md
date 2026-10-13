@@ -1,15 +1,17 @@
 # Design do Canva integrado ao site
 
+Este documento registra a home nativa preparada em 12/10/2026. Desde 13/10/2026, a home ativa volta a ser controlada pelo link de Settings. A versão nativa permanece guardada e aparece quando esse campo fica vazio. Veja [Trocar a página inicial pelo link do Canva](canva-home-link.md) para o funcionamento atual.
+
 O visual usa a referência `DAHXc1BjEC4`, com azul `#003366`, fundo creme, textos e as duas fotos do design. A home usa blocos nativos do editor. Cabeçalho, biblioteca, material, download e acesso usam a mesma paleta. Os botões da home abrem `/library` e os cartões de novidades vêm dos materiais publicados.
 
 ## Como editar
 
 - **Edit site → Home**: clique no bloco que deseja alterar. As opções abrem em **Properties**. Nos botões, use **Button text** e **Link**; nas fotos, **Upload image**. Publique pelo editor.
 - **Admin → Appearance**: ajuste as cores e demais opções do tema.
-- **Admin → Settings → Canva home → Canva design link**: guarde ou troque o link da referência. O aviso nessa tela informa que o site usa o visual integrado.
+- **Admin → Settings → Canva home → Canva design link**: define o Canva usado na home. Apague e salve se quiser usar a home nativa descrita neste documento.
 - **Admin → Materials**: continue gerenciando os documentos. As novidades da home acompanham os materiais publicados.
 
-Neste modo, trocar o link de referência não redesenha as páginas automaticamente. As alterações no site são feitas no editor e em Appearance. Apresentações e aulas incorporadas do Canva continuam disponíveis como conteúdo independente.
+A edição da home nativa é feita no editor e em Appearance. Quando o campo Canva design link está preenchido, o design da home é editado no Canva. Apresentações e aulas incorporadas continuam disponíveis como conteúdo independente.
 
 ## Configuração
 

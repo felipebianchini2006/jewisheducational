@@ -79,7 +79,6 @@ const homeCanvaSourceUrl = computed(() => canvaSourceUrl(siteSettings.value.home
 const homeCanvaEmbedUrl = computed(() => canvaEmbedUrl(homeCanvaSourceUrl.value));
 const showCanvaHome = computed(() => route.name === 'home'
   && Boolean(homeCanvaEmbedUrl.value)
-  && siteSettings.value.canva_integration_mode !== 'native'
   && !(builder.editMode && builder.canEdit));
 const footerTagline = computed(() => {
   const custom = siteSettings.value.footer_tagline;

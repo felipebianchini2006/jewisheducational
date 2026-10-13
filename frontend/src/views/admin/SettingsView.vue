@@ -10,13 +10,8 @@ const form = ref({});
 const message = ref('');
 const error = ref('');
 const canvaDesignLink = computed({
-  get: () => form.value.canva_integration_mode === 'native'
-    ? form.value.canva_design_reference_url || form.value.home_canva_url || ''
-    : form.value.home_canva_url || '',
-  set: value => {
-    const key = form.value.canva_integration_mode === 'native' ? 'canva_design_reference_url' : 'home_canva_url';
-    form.value[key] = value;
-  },
+  get: () => form.value.home_canva_url || '',
+  set: value => { form.value.home_canva_url = value; },
 });
 
 const socialProfiles = [
@@ -99,6 +94,8 @@ async function save() {
   try {
     const payload = {
       ...form.value,
+      home_canva_url: String(form.value.home_canva_url || '').trim(),
+      canva_integration_mode: String(form.value.home_canva_url || '').trim() ? 'canva' : 'native',
       download_limit_enabled: form.value.download_limit_enabled ? 'true' : 'false',
       download_limit_max: String(form.value.download_limit_max ?? 10),
       nav_max_top_level: String(form.value.nav_max_top_level ?? 0),
@@ -109,6 +106,8 @@ async function save() {
     };
     await api.put('/settings', { settings: payload });
     await settingsStore.load();
+    form.value.home_canva_url = settingsStore.settings.home_canva_url || '';
+    form.value.canva_integration_mode = settingsStore.settings.canva_integration_mode;
     message.value = 'Settings saved successfully.';
     setTimeout(() => { message.value = ''; }, 3000);
   } catch (err) {
@@ -166,17 +165,13 @@ async function save() {
         <h2 class="h6 text-uppercase text-muted mb-3 mt-4" style="letter-spacing:0.05em">Canva home</h2>
         <div class="row g-3">
           <div class="col-12">
-            <div v-if="form.canva_integration_mode === 'native'" class="alert alert-info">
-              <strong>Canva design integrated into the site</strong>
-              <p class="mb-0 mt-1">The home, library and resource pages use the Canva visual style with working search, account and download tools. This link is the design reference. Edit the live page text and images with Edit site, and site colors in Appearance.</p>
-            </div>
             <label class="admin-form-label" for="settings-home-canva-url">Canva design link</label>
             <input id="settings-home-canva-url" v-model="canvaDesignLink" type="url" class="form-control" placeholder="https://www.canva.com/design/.../view" />
-            <div v-if="form.canva_integration_mode !== 'native'" class="form-text">
-              Use a public Canva design or canva.link URL. Changes made in Canva appear on the home page automatically. The materials library stays available. Leave this blank to use the original home page.
+            <div class="form-text">
+              Paste a public Canva design or canva.link URL and click Save settings to replace the home page. Edit and publish the design in Canva to update it. Browse materials opens the library, where search and downloads continue to work. Leave this blank to use the saved site home.
             </div>
             <div class="mt-3">
-              <h3 class="h6">Canva on other pages</h3>
+              <h3 class="h6">Additional Canva content on other pages</h3>
               <p class="form-text mb-2">
                 In the site editor, choose Pages and select the page you want. Add a new responsive section, choose Canva, paste the public design link and click Apply Canva link. Click Publish to show it on the site.
               </p>

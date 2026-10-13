@@ -1,12 +1,12 @@
 # Canva em Settings e nas outras páginas
 
-Desde 12/10/2026, o site usa o visual do Canva em componentes nativos. O campo em Settings guarda a referência do design. Textos e imagens são editados em **Edit site**; as cores, em **Appearance**. Veja [Design do Canva integrado ao site](canva-design-integrado.md) para o uso atual.
+Desde 13/10/2026, o campo **Canva design link** volta a trocar a página inicial pelo design informado. Cole o link em **Admin → Settings → Canva home** e clique em **Save settings**. A biblioteca, a busca e os downloads continuam acessíveis por **Browse materials**. Veja [Trocar a página inicial pelo link do Canva](canva-home-link.md) para o uso atual.
 
-As instruções abaixo descrevem o modo anterior de incorporação. Elas ainda se aplicam a apresentações independentes inseridas como conteúdo, mas trocar o link da referência no modo nativo não redesenha o site automaticamente.
+Textos, imagens e botões desse design são editados no Canva. As áreas funcionais e o tema da biblioteca continuam no editor do site e em Appearance. Os registros de recuperação abaixo preservam o histórico das publicações.
 
-## Modo anterior de incorporação
+## Uso do Canva
 
-Para trocar o design incorporado da página inicial no modo anterior:
+Para trocar o design da página inicial:
 
 1. Abra **Admin → Settings → Canva home**.
 2. Cole o link público em **Canva design link**.
@@ -35,7 +35,7 @@ node scripts/restore-admin-settings.js <dist-publicado> <SettingsView-compilado.
 node --test scripts/restore-admin-settings.test.js
 ```
 
-O utilitário não publica nem acessa credenciais. Ele recusa dependências ausentes, exports incompatíveis, um import map anterior e um diretório de saída dentro da entrada. A publicação deve conservar a configuração atual do Hosting e o ambiente da função. Não substitua o backend pela versão antiga do repositório.
+O utilitário não publica nem acessa credenciais. Ele recusa dependências ausentes, exports incompatíveis, import maps inválidos ou concorrentes e um diretório de saída dentro da entrada. Um mapa existente é preservado, com apenas a entrada de Settings atualizada. A publicação deve conservar a configuração atual do Hosting e o ambiente da função. Não substitua o backend pela versão antiga do repositório.
 
 A cópia original deve continuar disponível até a conferência. Antes de uma futura publicação completa, reúna os códigos dos dois desenvolvedores e integre a tela Settings desta branch. Uma compilação normal usa o componente diretamente e dispensa o import map de recuperação.
 

@@ -49,3 +49,26 @@ test('rejects output nested inside the source build', t => {
   assert.throws(() => prepareSettingsRestore({ ...args, outputDist: path.join(args.currentDist, 'nested') }), /outside the current build/);
   assert.equal(fs.existsSync(path.join(args.currentDist, 'nested')), false);
 });
+
+test('updates Settings in an existing import map while preserving the current layout and other mappings', t => {
+  const args = fixture(t);
+  const oldMap = { imports: { '/assets/SettingsView-live.js': '/assets/SettingsView-prior.js', '/assets/PublicLayout-live.js': '/assets/PublicLayout-fixed.js' }, scopes: { '/extra/': { other: '/assets/other.js' } } };
+  fs.writeFileSync(path.join(args.currentDist, 'index.html'), `<html><head><script type="importmap">${JSON.stringify(oldMap)}</script><script type="module" src="/assets/index-live.js"></script></head></html>`);
+  const result = prepareSettingsRestore(args);
+  const html = fs.readFileSync(path.join(args.outputDist, 'index.html'), 'utf8');
+  assert.equal((html.match(/type="importmap"/g) || []).length, 1);
+  const map = JSON.parse(html.match(/<script type="importmap">(.*?)<\/script>/)[1]);
+  assert.equal(map.imports['/assets/SettingsView-live.js'], `/assets/${result.restoredSettings}`);
+  assert.equal(map.imports['/assets/PublicLayout-live.js'], '/assets/PublicLayout-fixed.js');
+  assert.deepEqual(map.scopes, oldMap.scopes);
+});
+
+test('rejects malformed and competing import maps before writing output', t => {
+  const args = fixture(t);
+  const shell = '<script type="module" src="/assets/index-live.js"></script>';
+  for (const maps of ['<script type="importmap">not json</script>', '<script type="importmap">{}</script><script type="importmap">{}</script>', '<script type="importmap">{"scopes":{"/admin/":{"/assets/SettingsView-live.js":"/other.js"}}}</script>']) {
+    fs.writeFileSync(path.join(args.currentDist, 'index.html'), `<html><head>${maps}${shell}</head></html>`);
+    assert.throws(() => prepareSettingsRestore(args), /import map|Settings/);
+    assert.equal(fs.existsSync(args.outputDist), false);
+  }
+});
