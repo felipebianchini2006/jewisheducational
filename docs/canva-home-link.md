@@ -35,7 +35,11 @@ O código de `CanvaHome.vue` foi preparado para mostrar somente o design, sem a 
 - Biblioteca: `https://jewisheducationalresources.org/library`
 - Login: `https://jewisheducationalresources.org/login`
 
-Em 13/10/2026, o link disponível abriu em modo de visualização e a edição ficou desabilitada. O usuário confirmou que possui somente o link público. A mudança permanece sem publicação até que esses botões sejam incluídos e seus destinos sejam testados. A versão publicada continua com a navegação externa.
+Em 13/10/2026, o link disponível abriu em modo de visualização e a edição ficou desabilitada. O usuário confirmou que possui somente o link público. Mais tarde, a cliente incluiu os botões no próprio design. Pela interface do Canva incorporado, foram testados **Resource Library**, que abriu `/library`, e a imagem de login, que abriu `/login`. A busca por `Alphabet` retornou dois materiais.
+
+A remoção da barra foi novamente autorizada, mas a publicação recebeu HTTP 403 no Firebase Hosting, Cloud Functions e Firestore para `felipebianchini02@gmail.com`. A identidade do token foi confirmada com o Google. O painel do site no Brave redirecionou para login, sem sessão de administrador. A versão pública ainda mantém a barra enquanto o acesso necessário não é restabelecido.
+
+Foi preparado um novo módulo a partir do `PublicLayout-d0a2eb249b9c.js` atualmente publicado. A análise sintática identificou somente a chamada de renderização do `nav` dentro do componente `CanvaHome`; a remoção alterou 482 bytes e preservou o restante do módulo e suas dependências. O módulo candidato é `PublicLayout-b0a6e29c6ecb.js`, conectado pelo import map existente. O JavaScript preparado passou na verificação de sintaxe. Os arquivos e o registro dessa tentativa estão em `/Users/felipebianchini/Developer/artifacts/jewisheducational-home-sem-barra-2026-10-13/`. A troca do módulo exige preservar a publicação e a configuração atuais e atualizar o mesmo HTML no Hosting e em `generated/index.html` da API.
 
 A preparação passou no build e em 17 testes de Settings, URLs do Canva, rotas e Analytics. Uma prévia local compilou o componente real com o design atual: o iframe iniciou na posição vertical zero e ocupou a altura inteira em 1280×720 e 390×844, sem rolagem horizontal nem erros no console. A navegação do Canva avançou para a página 2 e retornou à página 1. Essa validação não inclui a criação dos botões no design.
 
