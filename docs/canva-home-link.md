@@ -39,12 +39,18 @@ Em 13/10/2026, o link disponível abriu em modo de visualização e a edição f
 
 A preparação passou no build e em 17 testes de Settings, URLs do Canva, rotas e Analytics. Uma prévia local compilou o componente real com o design atual: o iframe iniciou na posição vertical zero e ocupou a altura inteira em 1280×720 e 390×844, sem rolagem horizontal nem erros no console. A navegação do Canva avançou para a página 2 e retornou à página 1. Essa validação não inclui a criação dos botões no design.
 
-## Relatório por documento no Google Analytics — configuração pendente
+## Relatório por documento no Google Analytics — configurado em 13/10/2026
 
-O Firebase confirmou a propriedade `541487710`, chamada `jewish-educational-resources`, e o fluxo `15065400088`, com Measurement ID `G-HHPLFCMXZC`. O acesso ao Firebase não permitiu configurar o Analytics: as contas conferidas no Brave abriram a tela inicial de criação de conta, e o token da CLI foi recusado pela API de Analytics por falta de escopo.
+O Firebase confirmou a propriedade `541487710`, chamada `jewish-educational-resources`, e o fluxo `15065400088`, com Measurement ID `G-HHPLFCMXZC`. Depois que a cliente liberou o acesso ao Analytics, a configuração foi feita pela interface dessa propriedade no Brave.
 
-Na conta com acesso de editor à propriedade, cadastrar dimensões de escopo Evento para `resourceTitle` (Documento) e `fileLabel` (Arquivo), se não existirem. Depois, criar uma exploração em formato livre com Documento e Arquivo nas linhas, Nome do evento nas colunas e Contagem de eventos nos valores. Filtrar os eventos `resource_preview_open` e `download_completed` e salvar como **Visualizações e downloads por documento**.
+Foram cadastradas as dimensões **Documento**, com parâmetro `resourceTitle`, e **Arquivo**, com parâmetro `fileLabel`, ambas no escopo Evento. Antes do cadastro, a propriedade não possuía dimensões personalizadas.
+
+A análise **Visualizações e downloads por documento** fica em **Analisar / Explore** e foi compartilhada em modo de leitura com os usuários que já têm acesso à propriedade. Link direto: `https://analytics.google.com/analytics/web/#/analysis/a397783813p541487710/edit/fnMBDYG0SCieOhMeumXAOQ`.
+
+A guia **Por documento e arquivo** usa formato livre em tabela, com Documento e Arquivo nas linhas e Nome do evento nas colunas. Os valores são Contagem de eventos (quantas vezes a ação ocorreu) e Total de usuários (quantos usuários registraram a ação no período). O filtro é Nome do evento correspondente à expressão `^(resource_preview_open|download_completed)$`. A tabela exibe até 100 linhas, com números em texto simples e período móvel de últimos 28 dias.
 
 `resource_preview_open` mede a abertura da prévia. `download_completed` é enviado depois que o endpoint devolve o arquivo completo e o navegador recebe a ação de download. `download_page_open` conta somente a abertura da tela de download. O código publicado utiliza os parâmetros em camelCase nesses eventos; `file_download` é um evento separado, com parâmetros em snake_case. Não somar os dois eventos de download como se fossem entregas diferentes.
 
-As dimensões novas podem levar de 24 a 48 horas para aparecer nos relatórios. A tabela da conta não foi criada nesta etapa por falta de acesso à propriedade.
+As dimensões novas podem levar de 24 a 48 horas para processar dados nos relatórios. Na configuração, registros anteriores apareceram com Documento e Arquivo como `(not set)`. Essa linha indica que o Analytics não tem esses campos disponíveis para os eventos mostrados; não é o nome de um material.
+
+Após recarregar a página, foram confirmados o nome da análise, as dimensões, as duas métricas, o filtro e o compartilhamento. A consulta respondeu sem erro. As capturas de tela e o registro de verificação estão em `/Users/felipebianchini/Developer/artifacts/jewisheducational-analytics-2026-10-13/`. Não houve alteração no código ou na publicação do site durante essa configuração.
