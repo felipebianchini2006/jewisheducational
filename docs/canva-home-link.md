@@ -2,7 +2,7 @@
 
 Em **Admin → Settings → Canva home → Canva design link**, cole o link público do design e clique em **Save settings**. Links `canva.link` são resolvidos pelo backend para a URL pública do design. Ao abrir novamente o site, a página inicial exibe esse Canva.
 
-Edite os textos, as imagens e os links dos botões no Canva. Salve e publique o design quando aplicável. O botão **Browse materials** continua abrindo a biblioteca do site, com busca e downloads. Links de botões criados no Canva também podem apontar para `/library` ou para uma categoria usando a URL completa do site.
+Edite os textos, as imagens e os links dos botões no Canva. Salve e publique o design quando aplicável. O botão **Resource Library**, incluído no Canva, abre a biblioteca do site, com busca e downloads. Links de botões criados no Canva também podem apontar para `/library` ou para uma categoria usando a URL completa do site.
 
 Apagar o campo e salvar restaura a home do editor que já está guardada no banco. Esse campo continua vazio depois de recarregar Settings. O link histórico de referência não o preenche novamente.
 
@@ -28,20 +28,28 @@ Publicação confirmada: Hosting `a249c493ed74f9ef`, API `api-00087-zif`, revis�
 
 Quem já estiver com o painel aberto deve recarregar a página uma vez para receber a tela Settings corrigida. O registro reversível e os prints estão em `/Users/felipebianchini/Developer/artifacts/jewisheducational-canva-link-2026-10-13/`.
 
-## Navegação dentro do Canva — publicação pendente
+## Navegação dentro do Canva — ativa em 13/10/2026
 
-O código de `CanvaHome.vue` foi preparado para mostrar somente o design, sem a barra branca externa. A remoção depende de botões de biblioteca e login no Canva, com estas URLs:
+A home publicada mostra o design sem a barra branca externa. Os botões de biblioteca e login ficam no próprio Canva, com estas URLs:
 
 - Biblioteca: `https://jewisheducationalresources.org/library`
 - Login: `https://jewisheducationalresources.org/login`
 
-Em 13/10/2026, o link disponível abriu em modo de visualização e a edição ficou desabilitada. O usuário confirmou que possui somente o link público. Mais tarde, a cliente incluiu os botões no próprio design. Pela interface do Canva incorporado, foram testados **Resource Library**, que abriu `/library`, e a imagem de login, que abriu `/login`. A busca por `Alphabet` retornou dois materiais.
+O link disponível permite somente visualização; a cliente incluiu os botões no design. Depois que o acesso ao Firebase foi restabelecido, a retirada da barra foi ativada pelo campo existente `theme_custom_css`, sem trocar os módulos atuais do Hosting ou da API. Foi acrescentada somente esta regra ao CSS já salvo:
 
-A remoção da barra foi novamente autorizada, mas a publicação recebeu HTTP 403 no Firebase Hosting, Cloud Functions e Firestore para `felipebianchini02@gmail.com`. A identidade do token foi confirmada com o Google. O painel do site no Brave redirecionou para login, sem sessão de administrador. A versão pública ainda mantém a barra enquanto o acesso necessário não é restabelecido.
+```css
+/* jer-canva-home-navigation:start */
+.canva-home-nav { display: none !important; }
+/* jer-canva-home-navigation:end */
+```
 
-Foi preparado um novo módulo a partir do `PublicLayout-d0a2eb249b9c.js` atualmente publicado. A análise sintática identificou somente a chamada de renderização do `nav` dentro do componente `CanvaHome`; a remoção alterou 482 bytes e preservou o restante do módulo e suas dependências. O módulo candidato é `PublicLayout-b0a6e29c6ecb.js`, conectado pelo import map existente. O JavaScript preparado passou na verificação de sintaxe. Os arquivos e o registro dessa tentativa estão em `/Users/felipebianchini/Developer/artifacts/jewisheducational-home-sem-barra-2026-10-13/`. A troca do módulo exige preservar a publicação e a configuração atuais e atualizar o mesmo HTML no Hosting e em `generated/index.html` da API.
+A atualização usou a conta autorizada do Firebase, uma máscara somente para `value` e a precondição `updateTime` do documento `settings/theme_custom_css`. O CSS anterior de 14.302 bytes foi preservado integralmente; o resultado possui 14.423 bytes. A comparação das 142 configurações públicas confirmou alteração apenas de `theme_custom_css`. A atualização no Firestore ocorreu em `2026-10-14T00:07:37.934462Z` (13/10, 21:07, em São Paulo). A API pública devolveu o novo CSS.
 
-A preparação passou no build e em 17 testes de Settings, URLs do Canva, rotas e Analytics. Uma prévia local compilou o componente real com o design atual: o iframe iniciou na posição vertical zero e ocupou a altura inteira em 1280×720 e 390×844, sem rolagem horizontal nem erros no console. A navegação do Canva avançou para a página 2 e retornou à página 1. Essa validação não inclui a criação dos botões no design.
+Depois de recarregar a home publicada, a barra ficou com `display: none` e deixou de ocupar espaço ou aparecer na árvore de acessibilidade. O iframe começou em `y=0` e ocupou os 720 pixels de altura em 1280×720 e os 844 pixels em 390×844. Não houve rolagem horizontal nem erros no console. Os botões do Canva abriram `/library` e `/login`. A biblioteca exibiu 48 materiais e a busca por `Alphabet` retornou dois. O botão de download levou ao login com o destino do arquivo preservado em `redirect`; não foi realizado um download autenticado em produção nesta etapa.
+
+O componente `CanvaHome.vue` nesta branch também já remove a navegação do HTML. Essa preparação passou no build, em 17 testes relevantes e em uma prévia local com o componente real. O módulo candidato preparado anteriormente não precisou ser publicado: o tema existente aplicou a retirada em produção sem substituir as alterações de outros desenvolvedores.
+
+Os prints de desktop, celular e busca, o CSS acrescentado e os registros de publicação estão em `/Users/felipebianchini/Developer/artifacts/jewisheducational-home-sem-barra-2026-10-13/`. Para desfazer somente a ativação pelo tema, remova o bloco entre os marcadores acima do CSS atual; preserve qualquer outra edição posterior. Uma republicação do código desta branch também mantém a home sem a barra, pois o componente não a renderiza.
 
 ## Relatório por documento no Google Analytics — configurado em 13/10/2026
 
